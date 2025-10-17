@@ -1,0 +1,2448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Compose Complete Guide - Professional Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #252526;
+            --bg-tertiary: #2d2d30;
+            --text-primary: #d4d4d4;
+            --text-secondary: #cccccc;
+            --text-muted: #6a9955;
+            --accent-blue: #007acc;
+            --accent-green: #4ec9b0;
+            --accent-orange: #ce9178;
+            --accent-purple: #c586c0;
+            --accent-yellow: #dcdcaa;
+            --border-color: #3e3e42;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .tldr {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .tldr h3 {
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--bg-secondary);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-list a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-list a:hover {
+            background: var(--bg-tertiary);
+            color: var(--accent-blue);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .section h2 {
+            color: var(--accent-blue);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent-blue);
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            color: var(--accent-green);
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .section h4 {
+            color: var(--accent-orange);
+            font-size: 1.2rem;
+            margin: 1rem 0 0.5rem 0;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .code-block .comment {
+            color: var(--text-muted);
+        }
+
+        .code-block .keyword {
+            color: var(--accent-purple);
+        }
+
+        .code-block .string {
+            color: var(--accent-orange);
+        }
+
+        .code-block .number {
+            color: var(--accent-yellow);
+        }
+
+        .code-block .property {
+            color: var(--accent-green);
+        }
+
+        /* Syntax Table */
+        .syntax-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .syntax-table th,
+        .syntax-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .syntax-table th {
+            background: var(--bg-tertiary);
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .syntax-table tr:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* Interactive Generator */
+        .generator {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .generator h3 {
+            color: var(--accent-blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        .btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #005a9e;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        /* Generated Output */
+        .generated-output {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        /* ASCII Diagrams */
+        .ascii-diagram {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+
+        /* Interactive Demo */
+        .demo-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .demo-step {
+            display: none;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .demo-step.active {
+            display: block;
+        }
+
+        /* FAQ Section */
+        .faq {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .faq-question {
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-list {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .section {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .demo-controls {
+                flex-direction: column;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Copy Button */
+        .copy-btn {
+            position: relative;
+            float: right;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            background: var(--border-color);
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🐳 Docker Compose Complete Guide</h1>
+            <p class="subtitle">Professional Documentation for Multi-Container Applications</p>
+            
+            <div class="tldr">
+                <h3>📋 TL;DR</h3>
+                <p><strong>Docker Compose</strong> is a tool for defining and running multi-container Docker applications using a YAML file. It solves the problem of managing multiple containers manually by providing declarative configuration, automatic networking, service discovery, and one-command deployment. Perfect for development, testing, and production environments.</p>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <ul class="nav-list">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#syntax">Syntax Guide</a></li>
+                <li><a href="#writing-guide">Writing Guide</a></li>
+                <li><a href="#samples">Sample Applications</a></li>
+                <li><a href="#generator">File Generator</a></li>
+                <li><a href="#behind-scenes">Behind the Scenes</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Section -->
+            <section id="overview" class="section">
+                <h2>🎯 What Docker Compose Solves</h2>
+                
+                <h3>The Problem with Plain Docker</h3>
+                <p>Before Docker Compose, managing multiple containers required manual commands:</p>
+                
+                <div class="code-block">
+<pre><span class="comment"># Manual container management - becomes unmaintainable</span>
+<span class="keyword">docker</span> run -d --name web -p 5000:5000 myapp
+<span class="keyword">docker</span> run -d --name redis redis:alpine
+<span class="keyword">docker</span> network create mynet
+<span class="keyword">docker</span> network connect mynet web
+<span class="keyword">docker</span> network connect mynet redis</pre>
+                </div>
+
+                <h3>Docker Compose Solution</h3>
+                <p>Docker Compose provides declarative configuration in a single YAML file:</p>
+                
+                <div class="code-block">
+<pre><span class="property">version:</span> <span class="string">"3.9"</span>
+
+<span class="property">services:</span>
+  <span class="property">web:</span>
+    <span class="property">build:</span> .
+    <span class="property">ports:</span>
+      - <span class="string">"5000:5000"</span>
+    <span class="property">depends_on:</span>
+      - redis
+
+  <span class="property">redis:</span>
+    <span class="property">image:</span> <span class="string">redis:alpine"</span></pre>
+                </div>
+
+                <h3>Key Benefits</h3>
+                <table class="syntax-table">
+                    <thead>
+                        <tr>
+                            <th>Problem</th>
+                            <th>Docker Compose Solution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Manual docker run commands</td>
+                            <td>Declarative YAML file</td>
+                        </tr>
+                        <tr>
+                            <td>Multiple containers</td>
+                            <td>Define as "services" in one file</td>
+                        </tr>
+                        <tr>
+                            <td>Shared configuration</td>
+                            <td>Centralized networks, volumes, environment</td>
+                        </tr>
+                        <tr>
+                            <td>Repeatable environment</td>
+                            <td>One command: docker compose up</td>
+                        </tr>
+                        <tr>
+                            <td>Portability</td>
+                            <td>Same environment anywhere</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Syntax Guide Section -->
+            <section id="syntax" class="section">
+                <h2>📝 Docker Compose File Syntax Guide</h2>
+                
+                <h3>Complete Syntax Reference</h3>
+                <table class="syntax-table">
+                    <thead>
+                        <tr>
+                            <th>Option</th>
+                            <th>Description</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>version</code></td>
+                            <td>Compose file format version</td>
+                            <td><code>"3.9"</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>services</code></td>
+                            <td>Define all containers</td>
+                            <td><code>web:, db:, redis:</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>build</code></td>
+                            <td>Build from Dockerfile</td>
+                            <td><code>build: .</code> or <code>build: ./backend</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>image</code></td>
+                            <td>Use pre-built image</td>
+                            <td><code>image: nginx:alpine</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>ports</code></td>
+                            <td>Port mapping (host:container)</td>
+                            <td><code>"8080:80"</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>environment</code></td>
+                            <td>Environment variables</td>
+                            <td><code>FLASK_ENV: development</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>volumes</code></td>
+                            <td>Mount paths or named volumes</td>
+                            <td><code>./src:/app</code> or <code>db_data:/var/lib/postgresql</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>depends_on</code></td>
+                            <td>Start order dependencies</td>
+                            <td><code>depends_on: [db, redis]</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>networks</code></td>
+                            <td>Network memberships</td>
+                            <td><code>networks: [backend, frontend]</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>restart</code></td>
+                            <td>Restart policy</td>
+                            <td><code>always, on-failure, unless-stopped</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>command</code></td>
+                            <td>Override default CMD</td>
+                            <td><code>["python", "app.py"]</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>container_name</code></td>
+                            <td>Custom container name</td>
+                            <td><code>myapp-web</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Detailed Option Explanations</h3>
+                
+                <h4>🔧 Build Options</h4>
+                <div class="code-block">
+<pre><span class="comment"># Simple build from current directory</span>
+<span class="property">build:</span> .
+
+<span class="comment"># Build from specific directory</span>
+<span class="property">build:</span>
+  <span class="property">context:</span> <span class="string">./backend</span>
+  <span class="property">dockerfile:</span> <span class="string">Dockerfile.prod</span>
+  <span class="property">args:</span>
+    <span class="property">NODE_ENV:</span> <span class="string">production</span>
+
+<span class="comment"># Build with target stage (multi-stage builds)</span>
+<span class="property">build:</span>
+  <span class="property">context:</span> .
+  <span class="property">target:</span> <span class="string">production</span></pre>
+                </div>
+
+                <h4>🌐 Network Configuration</h4>
+                <div class="code-block">
+<pre><span class="comment"># Default network (automatic)</span>
+<span class="property">services:</span>
+  <span class="property">web:</span>
+    <span class="property">build:</span> .
+
+<span class="comment"># Custom networks</span>
+<span class="property">services:</span>
+  <span class="property">web:</span>
+    <span class="property">networks:</span>
+      - <span class="string">frontend</span>
+      - <span class="string">backend</span>
+  <span class="property">api:</span>
+    <span class="property">networks:</span>
+      - <span class="string">backend</span>
+
+<span class="property">networks:</span>
+  <span class="property">frontend:</span>
+    <span class="property">driver:</span> <span class="string">bridge</span>
+  <span class="property">backend:</span>
+    <span class="property">driver:</span> <span class="string">bridge</span>
+    <span class="property">ipam:</span>
+      <span class="property">config:</span>
+        - <span class="property">subnet:</span> <span class="string">172.20.0.0/16</span></pre>
+                </div>
+
+                <h4>📦 Volume Management</h4>
+                <div class="code-block">
+<pre><span class="comment"># Bind mounts (development)</span>
+<span class="property">volumes:</span>
+  - <span class="string">./src:/app</span>
+  - <span class="string">./config:/etc/config</span>
+
+<span class="comment"># Named volumes (production)</span>
+<span class="property">volumes:</span>
+  - <span class="string">db_data:/var/lib/postgresql/data</span>
+  - <span class="string">cache_data:/var/cache</span>
+
+<span class="comment"># Volume definitions</span>
+<span class="property">volumes:</span>
+  <span class="property">db_data:</span>
+    <span class="property">driver:</span> <span class="string">local</span>
+  <span class="property">cache_data:</span>
+    <span class="property">driver:</span> <span class="string">local</span>
+    <span class="property">driver_opts:</span>
+      <span class="property">type:</span> <span class="string">none</span>
+      <span class="property">o:</span> <span class="string">bind</span>
+      <span class="property">device:</span> <span class="string">/host/cache</span></pre>
+                </div>
+
+                <h4>🔄 Environment Variables</h4>
+                <div class="code-block">
+<pre><span class="comment"># Direct assignment</span>
+<span class="property">environment:</span>
+  - <span class="string">NODE_ENV=production</span>
+  - <span class="string">DEBUG=false</span>
+
+<span class="comment"># Key-value format</span>
+<span class="property">environment:</span>
+  <span class="property">NODE_ENV:</span> <span class="string">production</span>
+  <span class="property">DEBUG:</span> <span class="string">false</span>
+
+<span class="comment"># From .env file</span>
+<span class="property">env_file:</span>
+  - <span class="string">.env</span>
+  - <span class="string">.env.production</span>
+
+<span class="comment"># Variable substitution</span>
+<span class="property">environment:</span>
+  - <span class="string">DATABASE_URL=${DB_HOST}:${DB_PORT}</span></pre>
+                </div>
+            </section>
+
+            <!-- Docker Compose File Writing Guide Section -->
+            <section id="writing-guide" class="section">
+                <h2>✍️ How to Write Docker Compose Files</h2>
+                <p>Master the art of writing Docker Compose files with proper syntax, formatting, and best practices.</p>
+                
+                <h3>📝 Basic Syntax Rules</h3>
+                <div class="tldr">
+                    <h4>Key Formatting Rules</h4>
+                    <ul style="color: var(--text-secondary); margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Indentation:</strong> Use 2 spaces (never tabs)</li>
+                        <li><strong>Quotes:</strong> Use double quotes for strings with special characters</li>
+                        <li><strong>Commas:</strong> Not needed in YAML (use proper indentation instead)</li>
+                        <li><strong>Colons:</strong> Always followed by a space</li>
+                        <li><strong>Lists:</strong> Use dashes (-) for array items</li>
+                    </ul>
+                </div>
+
+                <h3>🔧 Single Service Example</h3>
+                <p>Let's start with a simple web application:</p>
+                
+                <div class="code-block">
+<pre><span class="property">version:</span> <span class="string">"3.9"</span>
+
+<span class="property">services:</span>
+  <span class="property">web:</span>
+    <span class="property">build:</span> <span class="string">.</span>
+    <span class="property">ports:</span>
+      - <span class="string">"5000:5000"</span>
+    <span class="property">environment:</span>
+      - <span class="string">NODE_ENV=production</span>
+      - <span class="string">DEBUG=false</span>
+    <span class="property">volumes:</span>
+      - <span class="string">./src:/app</span>
+    <span class="property">restart:</span> <span class="string">unless-stopped</span></pre>
+                </div>
+
+                <h4>Syntax Breakdown</h4>
+                <table class="syntax-table">
+                    <thead>
+                        <tr>
+                            <th>Element</th>
+                            <th>Format</th>
+                            <th>Example</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>version</code></td>
+                            <td>Always in quotes</td>
+                            <td><code>"3.9"</code></td>
+                            <td>Required at the top</td>
+                        </tr>
+                        <tr>
+                            <td><code>services</code></td>
+                            <td>No quotes needed</td>
+                            <td><code>services:</code></td>
+                            <td>Main section</td>
+                        </tr>
+                        <tr>
+                            <td><code>service name</code></td>
+                            <td>No quotes, colon</td>
+                            <td><code>web:</code></td>
+                            <td>Must be unique</td>
+                        </tr>
+                        <tr>
+                            <td><code>ports</code></td>
+                            <td>Array with dashes</td>
+                            <td><code>- "5000:5000"</code></td>
+                            <td>Each port on new line</td>
+                        </tr>
+                        <tr>
+                            <td><code>environment</code></td>
+                            <td>Array or object</td>
+                            <td><code>- KEY=value</code></td>
+                            <td>Two formats supported</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>🏗️ Two Services Example</h3>
+                <p>Now let's add a database service and see how they interact:</p>
+                
+                <div class="code-block">
+<pre><span class="property">version:</span> <span class="string">"3.9"</span>
+
+<span class="property">services:</span>
+  <span class="property">web:</span>
+    <span class="property">build:</span> <span class="string">.</span>
+    <span class="property">container_name:</span> <span class="string">myapp-web</span>
+    <span class="property">ports:</span>
+      - <span class="string">"5000:5000"</span>
+    <span class="property">environment:</span>
+      <span class="property">NODE_ENV:</span> <span class="string">production</span>
+      <span class="property">DATABASE_URL:</span> <span class="string">postgresql://user:pass@db:5432/mydb</span>
+    <span class="property">volumes:</span>
+      - <span class="string">./src:/app</span>
+      - <span class="string">app_logs:/var/log</span>
+    <span class="property">depends_on:</span>
+      - <span class="string">db</span>
+    <span class="property">networks:</span>
+      - <span class="string">app-network</span>
+    <span class="property">restart:</span> <span class="string">unless-stopped</span>
+
+  <span class="property">db:</span>
+    <span class="property">image:</span> <span class="string">postgres:15</span>
+    <span class="property">container_name:</span> <span class="string">myapp-db</span>
+    <span class="property">environment:</span>
+      <span class="property">POSTGRES_DB:</span> <span class="string">mydb</span>
+      <span class="property">POSTGRES_USER:</span> <span class="string">user</span>
+      <span class="property">POSTGRES_PASSWORD:</span> <span class="string">pass</span>
+    <span class="property">volumes:</span>
+      - <span class="string">postgres_data:/var/lib/postgresql/data</span>
+    <span class="property">networks:</span>
+      - <span class="string">app-network</span>
+    <span class="property">restart:</span> <span class="string">unless-stopped</span>
+
+<span class="property">volumes:</span>
+  <span class="property">postgres_data:</span>
+  <span class="property">app_logs:</span>
+
+<span class="property">networks:</span>
+  <span class="property">app-network:</span>
+    <span class="property">driver:</span> <span class="string">bridge</span></pre>
+                </div>
+
+                <h4>Key Points Explained</h4>
+                <div class="tldr">
+                    <h4>🔗 Service Communication</h4>
+                    <p><strong>Service Discovery:</strong> Services can reach each other using service names as hostnames. The <code>web</code> service can connect to <code>db</code> using <code>db:5432</code>.</p>
+                    
+                    <h4>📦 Volume Types</h4>
+                    <ul style="color: var(--text-secondary); margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Bind mounts:</strong> <code>./src:/app</code> (host path to container path)</li>
+                        <li><strong>Named volumes:</strong> <code>postgres_data:/var/lib/postgresql/data</code> (managed by Docker)</li>
+                    </ul>
+                    
+                    <h4>🌐 Network Configuration</h4>
+                    <p>All services in the same network can communicate. The <code>app-network</code> allows <code>web</code> and <code>db</code> to talk to each other.</p>
+                </div>
+
+                <h3>📋 Common Syntax Patterns</h3>
+                
+                <h4>Environment Variables - Two Formats</h4>
+                <div class="code-block">
+<pre><span class="comment"># Format 1: Array (easier to read)</span>
+<span class="property">environment:</span>
+  - <span class="string">NODE_ENV=production</span>
+  - <span class="string">DEBUG=false</span>
+  - <span class="string">PORT=5000</span>
+
+<span class="comment"># Format 2: Object (more structured)</span>
+<span class="property">environment:</span>
+  <span class="property">NODE_ENV:</span> <span class="string">production</span>
+  <span class="property">DEBUG:</span> <span class="string">false</span>
+  <span class="property">PORT:</span> <span class="number">5000</span></pre>
+                </div>
+
+                <h4>Ports - Multiple Formats</h4>
+                <div class="code-block">
+<pre><span class="comment"># Single port</span>
+<span class="property">ports:</span>
+  - <span class="string">"5000:5000"</span>
+
+<span class="comment"># Multiple ports</span>
+<span class="property">ports:</span>
+  - <span class="string">"5000:5000"</span>
+  - <span class="string">"3000:3000"</span>
+  - <span class="string">"8080:80"</span>
+
+<span class="comment"># Port range</span>
+<span class="property">ports:</span>
+  - <span class="string">"8000-8010:8000-8010"</span>
+
+<span class="comment"># Host IP binding</span>
+<span class="property">ports:</span>
+  - <span class="string">"127.0.0.1:5000:5000"</span></pre>
+                </div>
+
+                <h4>Volumes - Different Types</h4>
+                <div class="code-block">
+<pre><span class="comment"># Bind mount (development)</span>
+<span class="property">volumes:</span>
+  - <span class="string">./src:/app</span>
+  - <span class="string">./config:/etc/config</span>
+
+<span class="comment"># Named volume (production)</span>
+<span class="property">volumes:</span>
+  - <span class="string">db_data:/var/lib/postgresql/data</span>
+  - <span class="string">cache_data:/var/cache</span>
+
+<span class="comment"># Read-only mount</span>
+<span class="property">volumes:</span>
+  - <span class="string">./config:/etc/config:ro</span>
+
+<span class="comment"># Anonymous volume</span>
+<span class="property">volumes:</span>
+  - <span class="string">/var/log</span></pre>
+                </div>
+
+                <h3>⚠️ Common Mistakes to Avoid</h3>
+                <table class="syntax-table">
+                    <thead>
+                        <tr>
+                            <th>❌ Wrong</th>
+                            <th>✅ Correct</th>
+                            <th>Why</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>version: 3.9</code></td>
+                            <td><code>version: "3.9"</code></td>
+                            <td>Version must be quoted</td>
+                        </tr>
+                        <tr>
+                            <td><code>ports: "5000:5000"</code></td>
+                            <td><code>ports:<br>&nbsp;&nbsp;- "5000:5000"</code></td>
+                            <td>Ports must be an array</td>
+                        </tr>
+                        <tr>
+                            <td><code>environment: NODE_ENV=production</code></td>
+                            <td><code>environment:<br>&nbsp;&nbsp;- NODE_ENV=production</code></td>
+                            <td>Environment must be array or object</td>
+                        </tr>
+                        <tr>
+                            <td><code>build: .</code></td>
+                            <td><code>build: .</code> or <code>build: "."</code></td>
+                            <td>Both work, but quotes are safer</td>
+                        </tr>
+                        <tr>
+                            <td><code>depends_on: db</code></td>
+                            <td><code>depends_on:<br>&nbsp;&nbsp;- db</code></td>
+                            <td>Dependencies must be an array</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>🎯 Best Practices</h3>
+                <div class="tldr">
+                    <h4>File Organization</h4>
+                    <ul style="color: var(--text-secondary); margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Order:</strong> version → services → volumes → networks</li>
+                        <li><strong>Naming:</strong> Use lowercase with hyphens for service names</li>
+                        <li><strong>Comments:</strong> Add comments for complex configurations</li>
+                        <li><strong>Environment:</strong> Use .env files for sensitive data</li>
+                    </ul>
+                    
+                    <h4>Production Considerations</h4>
+                    <ul style="color: var(--text-secondary); margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Secrets:</strong> Use Docker secrets or external secret management</li>
+                        <li><strong>Health checks:</strong> Add health checks for critical services</li>
+                        <li><strong>Resource limits:</strong> Set memory and CPU limits</li>
+                        <li><strong>Restart policies:</strong> Use appropriate restart policies</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Sample Compose Files Section -->
+            <section id="samples" class="section">
+                <h2>📋 Sample Docker Compose Files</h2>
+                <p>Ready-to-use Docker Compose configurations for common scenarios.</p>
+                
+                <h3>🌐 Web Application Stack</h3>
+                <p>Complete web application with database, cache, and reverse proxy.</p>
+                
+                <div class="code-block">
+<pre><span class="property">version:</span> <span class="string">"3.9"</span>
+
+<span class="property">services:</span>
+  <span class="property">web:</span>
+    <span class="property">build:</span> .
+    <span class="property">container_name:</span> <span class="string">myapp-web</span>
+    <span class="property">ports:</span>
+      - <span class="string">"3000:3000"</span>
+    <span class="property">environment:</span>
+      <span class="property">NODE_ENV:</span> <span class="string">production</span>
+      <span class="property">DATABASE_URL:</span> <span class="string">postgresql://user:pass@db:5432/myapp</span>
+      <span class="property">REDIS_URL:</span> <span class="string">redis://redis:6379</span>
+    <span class="property">volumes:</span>
+      - <span class="string">./src:/app</span>
+      - <span class="string">app_logs:/var/log</span>
+    <span class="property">depends_on:</span>
+      - <span class="string">db</span>
+      - <span class="string">redis</span>
+    <span class="property">networks:</span>
+      - <span class="string">app-network</span>
+    <span class="property">restart:</span> <span class="string">unless-stopped</span>
+    <span class="property">healthcheck:</span>
+      <span class="property">test:</span> [<span class="string">"CMD"</span>, <span class="string">"curl"</span>, <span class="string">"-f"</span>, <span class="string">"http://localhost:3000/health"</span>]
+      <span class="property">interval:</span> <span class="string">30s</span>
+      <span class="property">timeout:</span> <span class="string">10s</span>
+      <span class="property">retries:</span> <span class="number">3</span>
+
+  <span class="property">db:</span>
+    <span class="property">image:</span> <span class="string">postgres:15</span>
+    <span class="property">container_name:</span> <span class="string">myapp-db</span>
+    <span class="property">environment:</span>
+      <span class="property">POSTGRES_DB:</span> <span class="string">myapp</span>
+      <span class="property">POSTGRES_USER:</span> <span class="string">user</span>
+      <span class="property">POSTGRES_PASSWORD:</span> <span class="string">pass</span>
+    <span class="property">volumes:</span>
+      - <span class="string">postgres_data:/var/lib/postgresql/data</span>
+    <span class="property">networks:</span>
+      - <span class="string">app-network</span>
+    <span class="property">restart:</span> <span class="string">unless-stopped</span>
+
+  <span class="property">redis:</span>
+    <span class="property">image:</span> <span class="string">redis:7-alpine</span>
+    <span class="property">container_name:</span> <span class="string">myapp-redis</span>
+    <span class="property">volumes:</span>
+      - <span class="string">redis_data:/data</span>
+    <span class="property">networks:</span>
+      - <span class="string">app-network</span>
+    <span class="property">restart:</span> <span class="string">unless-stopped</span>
+
+  <span class="property">nginx:</span>
+    <span class="property">image:</span> <span class="string">nginx:alpine</span>
+    <span class="property">container_name:</span> <span class="string">myapp-nginx</span>
+    <span class="property">ports:</span>
+      - <span class="string">"80:80"</span>
+      - <span class="string">"443:443"</span>
+    <span class="property">volumes:</span>
+      - <span class="string">./nginx.conf:/etc/nginx/nginx.conf</span>
+      - <span class="string">./ssl:/etc/nginx/ssl</span>
+    <span class="property">depends_on:</span>
+      - <span class="string">web</span>
+    <span class="property">networks:</span>
+      - <span class="string">app-network</span>
+    <span class="property">restart:</span> <span class="string">unless-stopped</span>
+
+<span class="property">volumes:</span>
+  <span class="property">postgres_data:</span>
+  <span class="property">redis_data:</span>
+  <span class="property">app_logs:</span>
+
+<span class="property">networks:</span>
+  <span class="property">app-network:</span>
+    <span class="property">driver:</span> <span class="string">bridge</span></pre>
+                </div>
+
+                <h3>🐍 Python Development Environment</h3>
+                <p>Python development setup with hot reload and database.</p>
+                
+                <div class="code-block">
+<pre><span class="property">version:</span> <span class="string">"3.9"</span>
+
+<span class="property">services:</span>
+  <span class="property">app:</span>
+    <span class="property">build:</span>
+      <span class="property">context:</span> .
+      <span class="property">dockerfile:</span> <span class="string">Dockerfile.dev</span>
+    <span class="property">container_name:</span> <span class="string">python-dev</span>
+    <span class="property">ports:</span>
+      - <span class="string">"5000:5000"</span>
+    <span class="property">environment:</span>
+      <span class="property">FLASK_ENV:</span> <span class="string">development</span>
+      <span class="property">FLASK_DEBUG:</span> <span class="string">1</span>
+      <span class="property">DATABASE_URL:</span> <span class="string">postgresql://user:pass@db:5432/devdb</span>
+    <span class="property">volumes:</span>
+      - <span class="string">./src:/app</span>
+      - <span class="string">/app/__pycache__</span>
+    <span class="property">depends_on:</span>
+      - <span class="string">db</span>
+    <span class="property">networks:</span>
+      - <span class="string">dev-network</span>
+    <span class="property">command:</span> <span class="string">flask run --host=0.0.0.0</span>
+
+  <span class="property">db:</span>
+    <span class="property">image:</span> <span class="string">postgres:15</span>
+    <span class="property">container_name:</span> <span class="string">python-db</span>
+    <span class="property">environment:</span>
+      <span class="property">POSTGRES_DB:</span> <span class="string">devdb</span>
+      <span class="property">POSTGRES_USER:</span> <span class="string">user</span>
+      <span class="property">POSTGRES_PASSWORD:</span> <span class="string">pass</span>
+    <span class="property">volumes:</span>
+      - <span class="string">postgres_dev:/var/lib/postgresql/data</span>
+    <span class="property">ports:</span>
+      - <span class="string">"5432:5432"</span>
+    <span class="property">networks:</span>
+      - <span class="string">dev-network</span>
+
+  <span class="property">adminer:</span>
+    <span class="property">image:</span> <span class="string">adminer</span>
+    <span class="property">container_name:</span> <span class="string">python-adminer</span>
+    <span class="property">ports:</span>
+      - <span class="string">"8080:8080"</span>
+    <span class="property">networks:</span>
+      - <span class="string">dev-network</span>
+
+<span class="property">volumes:</span>
+  <span class="property">postgres_dev:</span>
+
+<span class="property">networks:</span>
+  <span class="property">dev-network:</span>
+    <span class="property">driver:</span> <span class="string">bridge</span></pre>
+                </div>
+
+                <h3>🚀 Microservices Architecture</h3>
+                <p>Multiple services with API gateway and service discovery.</p>
+                
+                <div class="code-block">
+<pre><span class="property">version:</span> <span class="string">"3.9"</span>
+
+<span class="property">services:</span>
+  <span class="property">api-gateway:</span>
+    <span class="property">image:</span> <span class="string">nginx:alpine</span>
+    <span class="property">container_name:</span> <span class="string">api-gateway</span>
+    <span class="property">ports:</span>
+      - <span class="string">"80:80"</span>
+    <span class="property">volumes:</span>
+      - <span class="string">./gateway.conf:/etc/nginx/nginx.conf</span>
+    <span class="property">depends_on:</span>
+      - <span class="string">user-service</span>
+      - <span class="string">order-service</span>
+    <span class="property">networks:</span>
+      - <span class="string">microservices</span>
+
+  <span class="property">user-service:</span>
+    <span class="property">build:</span> ./user-service
+    <span class="property">container_name:</span> <span class="string">user-service</span>
+    <span class="property">environment:</span>
+      <span class="property">PORT:</span> <span class="number">3001</span>
+      <span class="property">DB_HOST:</span> <span class="string">user-db</span>
+    <span class="property">depends_on:</span>
+      - <span class="string">user-db</span>
+    <span class="property">networks:</span>
+      - <span class="string">microservices</span>
+
+  <span class="property">order-service:</span>
+    <span class="property">build:</span> ./order-service
+    <span class="property">container_name:</span> <span class="string">order-service</span>
+    <span class="property">environment:</span>
+      <span class="property">PORT:</span> <span class="number">3002</span>
+      <span class="property">DB_HOST:</span> <span class="string">order-db</span>
+    <span class="property">depends_on:</span>
+      - <span class="string">order-db</span>
+    <span class="property">networks:</span>
+      - <span class="string">microservices</span>
+
+  <span class="property">user-db:</span>
+    <span class="property">image:</span> <span class="string">postgres:15</span>
+    <span class="property">container_name:</span> <span class="string">user-db</span>
+    <span class="property">environment:</span>
+      <span class="property">POSTGRES_DB:</span> <span class="string">users</span>
+      <span class="property">POSTGRES_USER:</span> <span class="string">user</span>
+      <span class="property">POSTGRES_PASSWORD:</span> <span class="string">pass</span>
+    <span class="property">volumes:</span>
+      - <span class="string">user_data:/var/lib/postgresql/data</span>
+    <span class="property">networks:</span>
+      - <span class="string">microservices</span>
+
+  <span class="property">order-db:</span>
+    <span class="property">image:</span> <span class="string">postgres:15</span>
+    <span class="property">container_name:</span> <span class="string">order-db</span>
+    <span class="property">environment:</span>
+      <span class="property">POSTGRES_DB:</span> <span class="string">orders</span>
+      <span class="property">POSTGRES_USER:</span> <span class="string">user</span>
+      <span class="property">POSTGRES_PASSWORD:</span> <span class="string">pass</span>
+    <span class="property">volumes:</span>
+      - <span class="string">order_data:/var/lib/postgresql/data</span>
+    <span class="property">networks:</span>
+      - <span class="string">microservices</span>
+
+<span class="property">volumes:</span>
+  <span class="property">user_data:</span>
+  <span class="property">order_data:</span>
+
+<span class="property">networks:</span>
+  <span class="property">microservices:</span>
+    <span class="property">driver:</span> <span class="string">bridge</span></pre>
+                </div>
+
+                <h3>📊 Monitoring Stack</h3>
+                <p>Complete monitoring solution with Prometheus, Grafana, and AlertManager.</p>
+                
+                <div class="code-block">
+<pre><span class="property">version:</span> <span class="string">"3.9"</span>
+
+<span class="property">services:</span>
+  <span class="property">prometheus:</span>
+    <span class="property">image:</span> <span class="string">prom/prometheus</span>
+    <span class="property">container_name:</span> <span class="string">prometheus</span>
+    <span class="property">ports:</span>
+      - <span class="string">"9090:9090"</span>
+    <span class="property">volumes:</span>
+      - <span class="string">./prometheus.yml:/etc/prometheus/prometheus.yml</span>
+      - <span class="string">prometheus_data:/prometheus</span>
+    <span class="property">command:</span>
+      - <span class="string">'--config.file=/etc/prometheus/prometheus.yml'</span>
+      - <span class="string">'--storage.tsdb.path=/prometheus'</span>
+    <span class="property">networks:</span>
+      - <span class="string">monitoring</span>
+
+  <span class="property">grafana:</span>
+    <span class="property">image:</span> <span class="string">grafana/grafana</span>
+    <span class="property">container_name:</span> <span class="string">grafana</span>
+    <span class="property">ports:</span>
+      - <span class="string">"3000:3000"</span>
+    <span class="property">environment:</span>
+      <span class="property">GF_SECURITY_ADMIN_PASSWORD:</span> <span class="string">admin</span>
+    <span class="property">volumes:</span>
+      - <span class="string">grafana_data:/var/lib/grafana</span>
+    <span class="property">networks:</span>
+      - <span class="string">monitoring</span>
+
+  <span class="property">alertmanager:</span>
+    <span class="property">image:</span> <span class="string">prom/alertmanager</span>
+    <span class="property">container_name:</span> <span class="string">alertmanager</span>
+    <span class="property">ports:</span>
+      - <span class="string">"9093:9093"</span>
+    <span class="property">volumes:</span>
+      - <span class="string">./alertmanager.yml:/etc/alertmanager/alertmanager.yml</span>
+    <span class="property">networks:</span>
+      - <span class="string">monitoring</span>
+
+  <span class="property">node-exporter:</span>
+    <span class="property">image:</span> <span class="string">prom/node-exporter</span>
+    <span class="property">container_name:</span> <span class="string">node-exporter</span>
+    <span class="property">ports:</span>
+      - <span class="string">"9100:9100</span>
+    <span class="property">volumes:</span>
+      - <span class="string">/proc:/host/proc:ro</span>
+      - <span class="string">/sys:/host/sys:ro</span>
+      - <span class="string">/:/rootfs:ro</span>
+    <span class="property">command:</span>
+      - <span class="string">'--path.procfs=/host/proc'</span>
+      - <span class="string">'--path.sysfs=/host/sys'</span>
+      - <span class="string">'--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'</span>
+    <span class="property">networks:</span>
+      - <span class="string">monitoring</span>
+
+<span class="property">volumes:</span>
+  <span class="property">prometheus_data:</span>
+  <span class="property">grafana_data:</span>
+
+<span class="property">networks:</span>
+  <span class="property">monitoring:</span>
+    <span class="property">driver:</span> <span class="string">bridge</span></pre>
+                </div>
+
+                <h3>🔧 Simple Development Setup</h3>
+                <p>Minimal setup for quick development and testing.</p>
+                
+                <div class="code-block">
+<pre><span class="property">version:</span> <span class="string">"3.9"</span>
+
+<span class="property">services:</span>
+  <span class="property">app:</span>
+    <span class="property">build:</span> .
+    <span class="property">ports:</span>
+      - <span class="string">"8080:8080"</span>
+    <span class="property">volumes:</span>
+      - <span class="string">./src:/app</span>
+    <span class="property">environment:</span>
+      <span class="property">NODE_ENV:</span> <span class="string">development</span>
+
+  <span class="property">db:</span>
+    <span class="property">image:</span> <span class="string">postgres:15</span>
+    <span class="property">environment:</span>
+      <span class="property">POSTGRES_DB:</span> <span class="string">myapp</span>
+      <span class="property">POSTGRES_USER:</span> <span class="string">user</span>
+      <span class="property">POSTGRES_PASSWORD:</span> <span class="string">pass</span>
+    <span class="property">ports:</span>
+      - <span class="string">"5432:5432"</span></pre>
+                </div>
+
+                <h3>🎯 Production-Ready Example</h3>
+                <p>Production configuration with security, health checks, and resource limits.</p>
+                
+                <div class="code-block">
+<pre><span class="property">version:</span> <span class="string">"3.9"</span>
+
+<span class="property">services:</span>
+  <span class="property">web:</span>
+    <span class="property">build:</span> .
+    <span class="property">container_name:</span> <span class="string">prod-web</span>
+    <span class="property">ports:</span>
+      - <span class="string">"80:8080"</span>
+    <span class="property">environment:</span>
+      <span class="property">NODE_ENV:</span> <span class="string">production</span>
+      <span class="property">DATABASE_URL:</span> <span class="string">${DATABASE_URL}</span>
+    <span class="property">volumes:</span>
+      - <span class="string">app_logs:/var/log</span>
+    <span class="property">depends_on:</span>
+      - <span class="string">db</span>
+    <span class="property">networks:</span>
+      - <span class="string">backend</span>
+    <span class="property">restart:</span> <span class="string">unless-stopped</span>
+    <span class="property">healthcheck:</span>
+      <span class="property">test:</span> [<span class="string">"CMD"</span>, <span class="string">"curl"</span>, <span class="string">"-f"</span>, <span class="string">"http://localhost:8080/health"</span>]
+      <span class="property">interval:</span> <span class="string">30s</span>
+      <span class="property">timeout:</span> <span class="string">10s</span>
+      <span class="property">retries:</span> <span class="number">3</span>
+    <span class="property">deploy:</span>
+      <span class="property">resources:</span>
+        <span class="property">limits:</span>
+          <span class="property">memory:</span> <span class="string">512M</span>
+          <span class="property">cpus:</span> <span class="string">0.5</span>
+    <span class="property">labels:</span>
+      - <span class="string">com.example.service=web</span>
+      - <span class="string">com.example.version=1.0</span>
+
+  <span class="property">db:</span>
+    <span class="property">image:</span> <span class="string">postgres:15</span>
+    <span class="property">container_name:</span> <span class="string">prod-db</span>
+    <span class="property">environment:</span>
+      <span class="property">POSTGRES_DB:</span> <span class="string">${POSTGRES_DB}</span>
+      <span class="property">POSTGRES_USER:</span> <span class="string">${POSTGRES_USER}</span>
+      <span class="property">POSTGRES_PASSWORD:</span> <span class="string">${POSTGRES_PASSWORD}</span>
+    <span class="property">volumes:</span>
+      - <span class="string">postgres_data:/var/lib/postgresql/data</span>
+    <span class="property">networks:</span>
+      - <span class="string">backend</span>
+    <span class="property">restart:</span> <span class="string">unless-stopped</span>
+    <span class="property">deploy:</span>
+      <span class="property">resources:</span>
+        <span class="property">limits:</span>
+          <span class="property">memory:</span> <span class="string">1G</span>
+          <span class="property">cpus:</span> <span class="string">1.0</span>
+
+<span class="property">volumes:</span>
+  <span class="property">postgres_data:</span>
+  <span class="property">app_logs:</span>
+
+<span class="property">networks:</span>
+  <span class="property">backend:</span>
+    <span class="property">driver:</span> <span class="string">bridge</span></pre>
+                </div>
+            </section>
+
+            <!-- Interactive Generator Section -->
+            <section id="generator" class="section">
+                <h2>🛠️ Interactive Docker Compose Generator</h2>
+                <p>Generate Docker Compose files with a VS Code-like interface. Configure your services and get a complete docker-compose.yml file.</p>
+                
+                <div class="generator">
+                    <h3>Service Configuration</h3>
+                    
+                    <div class="form-group">
+                        <label for="project-name">Project Name</label>
+                        <input type="text" id="project-name" placeholder="my-app" value="my-app">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="compose-version">Compose Version</label>
+                        <select id="compose-version">
+                            <option value="3.9">3.9 (Recommended)</option>
+                            <option value="3.8">3.8</option>
+                            <option value="3.7">3.7</option>
+                        </select>
+                    </div>
+
+                    <div id="services-container">
+                        <div class="service-config" data-service="0">
+                            <h4>Service 1</h4>
+                            <div class="form-group">
+                                <label>Service Name</label>
+                                <input type="text" class="service-name" placeholder="web" value="web">
+                            </div>
+                            <div class="form-group">
+                                <label>Service Type</label>
+                                <select class="service-type">
+                                    <option value="build">Build from Dockerfile</option>
+                                    <option value="image">Use Pre-built Image</option>
+                                </select>
+                            </div>
+                            <div class="form-group build-config" style="display: block;">
+                                <label>Build Context</label>
+                                <input type="text" class="build-context" placeholder="." value=".">
+                            </div>
+                            <div class="form-group image-config" style="display: none;">
+                                <label>Image Name</label>
+                                <input type="text" class="image-name" placeholder="nginx:alpine">
+                            </div>
+                            <div class="form-group">
+                                <label>Ports (host:container)</label>
+                                <input type="text" class="ports" placeholder="8080:80" value="8080:80">
+                            </div>
+                            <div class="form-group">
+                                <label>Environment Variables (one per line)</label>
+                                <textarea class="environment" placeholder="NODE_ENV=production&#10;DEBUG=false" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Dependencies (comma-separated)</label>
+                                <input type="text" class="depends-on" placeholder="db, redis">
+                            </div>
+                            <div class="form-group">
+                                <label>Volumes (one per line)</label>
+                                <textarea class="volumes" placeholder="./src:/app&#10;db_data:/var/lib/postgresql/data" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Networks (comma-separated)</label>
+                                <input type="text" class="networks" placeholder="frontend, backend">
+                            </div>
+                            <div class="form-group">
+                                <label>Container Name</label>
+                                <input type="text" class="container-name" placeholder="myapp-web">
+                            </div>
+                            <div class="form-group">
+                                <label>Command Override</label>
+                                <input type="text" class="command" placeholder="python app.py">
+                            </div>
+                            <div class="form-group">
+                                <label>Working Directory</label>
+                                <input type="text" class="working-dir" placeholder="/app">
+                            </div>
+                            <div class="form-group">
+                                <label>User (UID:GID)</label>
+                                <input type="text" class="user" placeholder="1000:1000">
+                            </div>
+                            <div class="form-group">
+                                <label>Health Check Command</label>
+                                <input type="text" class="healthcheck" placeholder="curl -f http://localhost:5000/health">
+                            </div>
+                            <div class="form-group">
+                                <label>Labels (one per line)</label>
+                                <textarea class="labels" placeholder="com.example.service=web&#10;com.example.version=1.0" rows="2"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Memory Limit</label>
+                                <input type="text" class="memory-limit" placeholder="512m">
+                            </div>
+                            <div class="form-group">
+                                <label>CPU Limit</label>
+                                <input type="text" class="cpu-limit" placeholder="0.5">
+                            </div>
+                            <div class="form-group">
+                                <label>Restart Policy</label>
+                                <select class="restart">
+                                    <option value="no">no</option>
+                                    <option value="always">always</option>
+                                    <option value="on-failure">on-failure</option>
+                                    <option value="unless-stopped" selected>unless-stopped</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-secondary" onclick="addService()">+ Add Service</button>
+                        <button class="btn" onclick="generateCompose()">Generate Docker Compose</button>
+                    </div>
+
+                    <div id="generated-output" class="generated-output" style="display: none;">
+                        <button class="copy-btn" onclick="copyToClipboard()">Copy</button>
+                        <pre id="compose-content"></pre>
+                    </div>
+                </div>
+
+                <h3>📋 Generator Field Explanations</h3>
+                <div class="tldr">
+                    <h4>Volume Examples</h4>
+                    <div class="code-block">
+<pre><span class="comment"># Bind mounts (development)</span>
+./src:/app
+./config:/etc/config
+./logs:/var/log
+
+<span class="comment"># Named volumes (production)</span>
+db_data:/var/lib/postgresql/data
+cache_data:/var/cache
+app_logs:/var/log/app</pre>
+                    </div>
+
+                    <h4>Network Examples</h4>
+                    <div class="code-block">
+<pre><span class="comment"># Single network</span>
+frontend
+
+<span class="comment"># Multiple networks</span>
+frontend, backend, database</pre>
+                    </div>
+
+                    <h4>Command Examples</h4>
+                    <div class="code-block">
+<pre><span class="comment"># Override default command</span>
+python app.py
+npm start
+java -jar app.jar
+
+<span class="comment"># With arguments</span>
+python manage.py runserver 0.0.0.0:8000</pre>
+                    </div>
+
+                    <h4>User Examples</h4>
+                    <div class="code-block">
+<pre><span class="comment"># Run as specific user</span>
+1000:1000
+root
+www-data:www-data</pre>
+                    </div>
+
+                    <h4>Health Check Examples</h4>
+                    <div class="code-block">
+<pre><span class="comment"># HTTP health check</span>
+curl -f http://localhost:5000/health
+
+<span class="comment"># Database health check</span>
+pg_isready -U postgres
+
+<span class="comment"># Custom script</span>
+./health-check.sh</pre>
+                    </div>
+
+                    <h4>Labels Examples</h4>
+                    <div class="code-block">
+<pre><span class="comment"># Service identification</span>
+com.example.service=web
+com.example.version=1.0
+com.example.environment=production</pre>
+                    </div>
+
+                    <h4>Resource Limits Examples</h4>
+                    <div class="code-block">
+<pre><span class="comment"># Memory limits</span>
+512m
+1g
+2.5g
+
+<span class="comment"># CPU limits</span>
+0.5
+1.0
+2.5</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Behind the Scenes Section -->
+            <section id="behind-scenes" class="section">
+                <h2>🔍 How Docker Compose Works Behind the Scenes</h2>
+                
+                <h3>Step-by-Step Process</h3>
+                <div class="demo-container">
+                    <div class="demo-controls">
+                        <button class="btn" onclick="showStep(1)">1. Parse YAML</button>
+                        <button class="btn" onclick="showStep(2)">2. Create Networks</button>
+                        <button class="btn" onclick="showStep(3)">3. Build Images</button>
+                        <button class="btn" onclick="showStep(4)">4. Start Containers</button>
+                        <button class="btn" onclick="showStep(5)">5. Service Discovery</button>
+                    </div>
+
+                    <div id="step-1" class="demo-step active">
+                        <h4>1. Parse YAML Configuration</h4>
+                        <p>Docker Compose reads and validates the docker-compose.yml file:</p>
+                        <div class="code-block">
+<pre><span class="comment"># Compose validates syntax and structure</span>
+<span class="keyword">docker</span> compose config
+
+<span class="comment"># Creates internal representation:</span>
+{
+  <span class="string">"services"</span>: {
+    <span class="string">"web"</span>: { <span class="string">"build"</span>: <span class="string">"."</span>, <span class="string">"ports"</span>: [<span class="string">"5000:5000"</span>] },
+    <span class="string">"db"</span>: { <span class="string">"image"</span>: <span class="string">"postgres:15"</span> }
+  },
+  <span class="string">"networks"</span>: { <span class="string">"default"</span>: { <span class="string">"driver"</span>: <span class="string">"bridge"</span> } }
+}</pre>
+                        </div>
+                    </div>
+
+                    <div id="step-2" class="demo-step">
+                        <h4>2. Create Networks</h4>
+                        <p>Compose creates a default bridge network for service communication:</p>
+                        <div class="ascii-diagram">
+<pre>┌─────────────────────────────────────┐
+│  Docker Compose Network Creation    │
+├─────────────────────────────────────┤
+│  Project: myapp                     │
+│  Network: myapp_default             │
+│  Driver: bridge                     │
+│  Subnet: 172.20.0.0/16             │
+└─────────────────────────────────────┘
+
+<span class="comment"># Equivalent to:</span>
+<span class="keyword">docker</span> network create myapp_default</pre>
+                        </div>
+                    </div>
+
+                    <div id="step-3" class="demo-step">
+                        <h4>3. Build Images</h4>
+                        <p>For services with build context, Docker builds images:</p>
+                        <div class="code-block">
+<pre><span class="comment"># For each service with build: directive</span>
+<span class="keyword">docker</span> build -t myapp_web .
+<span class="keyword">docker</span> build -t myapp_api ./api
+
+<span class="comment"># Image naming convention:</span>
+<span class="comment"># {project_name}_{service_name}</span></pre>
+                        </div>
+                    </div>
+
+                    <div id="step-4" class="demo-step">
+                        <h4>4. Start Containers</h4>
+                        <p>Containers are started in dependency order:</p>
+                        <div class="ascii-diagram">
+<pre>Start Order:
+1. db (no dependencies)
+2. redis (no dependencies)  
+3. web (depends_on: [db, redis])
+
+Container Names:
+- myapp_db_1
+- myapp_redis_1  
+- myapp_web_1
+
+Network Assignment:
+All containers → myapp_default</pre>
+                        </div>
+                    </div>
+
+                    <div id="step-5" class="demo-step">
+                        <h4>5. Service Discovery</h4>
+                        <p>DNS entries are automatically created for service communication:</p>
+                        <div class="code-block">
+<pre><span class="comment"># Inside containers, services are reachable by name:</span>
+<span class="string">'web'</span> → <span class="number">172.20.0.3</span>
+<span class="string">'db'</span> → <span class="number">172.20.0.4</span>
+<span class="string">'redis'</span> → <span class="number">172.20.0.5</span>
+
+<span class="comment"># Application code can use:</span>
+<span class="keyword">const</span> dbUrl = <span class="string">'postgresql://user:pass@db:5432/mydb'</span>;
+<span class="keyword">const</span> redis = <span class="keyword">new</span> Redis({ host: <span class="string">'redis'</span> });</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Network Architecture</h3>
+                <div class="ascii-diagram">
+<pre>┌─────────────────────────────────────────────────────────┐
+│                Docker Compose Network                   │
+├─────────────────────────────────────────────────────────┤
+│  Host Machine (localhost)                              │
+│  ┌─────────────────────────────────────────────────┐   │
+│  │  myapp_default (bridge network)                │   │
+│  │  ┌─────────┐  ┌─────────┐  ┌─────────┐        │   │
+│  │  │   web   │  │   db    │  │  redis  │        │   │
+│  │  │ :5000   │  │ :5432   │  │ :6379   │        │   │
+│  │  └─────────┘  └─────────┘  └─────────┘        │   │
+│  └─────────────────────────────────────────────────┘   │
+│                                                       │
+│  Port Mapping:                                        │
+│  localhost:5000 → web:5000                            │
+│  localhost:5432 → db:5432                             │
+│  localhost:6379 → redis:6379                          │
+└─────────────────────────────────────────────────────────┘</pre>
+                </div>
+
+                <h3>Docker Compose Commands Lifecycle</h3>
+                <p>Complete guide to Docker Compose commands for managing your application lifecycle.</p>
+                
+                <h4>🚀 Starting Services</h4>
+                <table class="syntax-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Purpose</th>
+                            <th>Options</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>docker compose up</code></td>
+                            <td>Start all services</td>
+                            <td><code>-d</code> (detached), <code>--build</code>, <code>--force-recreate</code></td>
+                            <td><code>docker compose up -d --build</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose up service</code></td>
+                            <td>Start specific service</td>
+                            <td><code>-d</code>, <code>--build</code></td>
+                            <td><code>docker compose up -d web</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose start</code></td>
+                            <td>Start existing containers</td>
+                            <td><code>service</code> (optional)</td>
+                            <td><code>docker compose start db</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose create</code></td>
+                            <td>Create containers without starting</td>
+                            <td><code>--build</code>, <code>--force-recreate</code></td>
+                            <td><code>docker compose create --build</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>🛑 Stopping Services</h4>
+                <table class="syntax-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Purpose</th>
+                            <th>Options</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>docker compose down</code></td>
+                            <td>Stop and remove everything</td>
+                            <td><code>-v</code> (volumes), <code>--remove-orphans</code></td>
+                            <td><code>docker compose down -v</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose stop</code></td>
+                            <td>Stop running containers</td>
+                            <td><code>service</code> (optional), <code>-t</code> (timeout)</td>
+                            <td><code>docker compose stop -t 30</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose kill</code></td>
+                            <td>Force kill containers</td>
+                            <td><code>-s</code> (signal), <code>service</code></td>
+                            <td><code>docker compose kill -s SIGKILL</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose pause</code></td>
+                            <td>Pause containers</td>
+                            <td><code>service</code> (optional)</td>
+                            <td><code>docker compose pause web</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose unpause</code></td>
+                            <td>Unpause containers</td>
+                            <td><code>service</code> (optional)</td>
+                            <td><code>docker compose unpause web</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>🔄 Managing Services</h4>
+                <table class="syntax-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Purpose</th>
+                            <th>Options</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>docker compose restart</code></td>
+                            <td>Restart services</td>
+                            <td><code>service</code>, <code>-t</code> (timeout)</td>
+                            <td><code>docker compose restart web db</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose scale</code></td>
+                            <td>Scale services</td>
+                            <td><code>service=count</code></td>
+                            <td><code>docker compose scale web=3</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose pull</code></td>
+                            <td>Pull latest images</td>
+                            <td><code>service</code>, <code>--ignore-pull-failures</code></td>
+                            <td><code>docker compose pull</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose build</code></td>
+                            <td>Build images</td>
+                            <td><code>service</code>, <code>--no-cache</code>, <code>--pull</code></td>
+                            <td><code>docker compose build --no-cache</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>📊 Monitoring & Debugging</h4>
+                <table class="syntax-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Purpose</th>
+                            <th>Options</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>docker compose logs</code></td>
+                            <td>View service logs</td>
+                            <td><code>-f</code> (follow), <code>--tail</code>, <code>--since</code></td>
+                            <td><code>docker compose logs -f --tail=100 web</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose ps</code></td>
+                            <td>List services</td>
+                            <td><code>-a</code> (all), <code>-q</code> (quiet)</td>
+                            <td><code>docker compose ps -a</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose top</code></td>
+                            <td>Show running processes</td>
+                            <td><code>service</code></td>
+                            <td><code>docker compose top web</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose exec</code></td>
+                            <td>Execute commands in container</td>
+                            <td><code>-it</code>, <code>-u</code> (user)</td>
+                            <td><code>docker compose exec -it web bash</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose run</code></td>
+                            <td>Run one-off commands</td>
+                            <td><code>--rm</code>, <code>-e</code> (env), <code>-v</code> (volume)</td>
+                            <td><code>docker compose run --rm web python manage.py migrate</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>🔧 Configuration & Validation</h4>
+                <table class="syntax-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Purpose</th>
+                            <th>Options</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>docker compose config</code></td>
+                            <td>Validate and show config</td>
+                            <td><code>--services</code>, <code>--volumes</code>, <code>--quiet</code></td>
+                            <td><code>docker compose config --services</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose port</code></td>
+                            <td>Show port mappings</td>
+                            <td><code>service port</code></td>
+                            <td><code>docker compose port web 3000</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose images</code></td>
+                            <td>List images</td>
+                            <td><code>-q</code> (quiet)</td>
+                            <td><code>docker compose images</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose events</code></td>
+                            <td>Show real-time events</td>
+                            <td><code>--json</code></td>
+                            <td><code>docker compose events --json</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>🧹 Cleanup Commands</h4>
+                <table class="syntax-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Purpose</th>
+                            <th>Options</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>docker compose down --volumes</code></td>
+                            <td>Remove volumes</td>
+                            <td><code>--remove-orphans</code></td>
+                            <td><code>docker compose down -v --remove-orphans</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose rm</code></td>
+                            <td>Remove stopped containers</td>
+                            <td><code>-f</code> (force), <code>-v</code> (volumes)</td>
+                            <td><code>docker compose rm -fv</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker system prune</code></td>
+                            <td>Clean up system</td>
+                            <td><code>-a</code> (all), <code>--volumes</code></td>
+                            <td><code>docker system prune -a --volumes</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>🔄 Complete Lifecycle Workflow</h3>
+                <div class="code-block">
+<pre><span class="comment"># 1. Development Workflow</span>
+<span class="keyword">docker</span> compose up -d --build          <span class="comment"># Start with rebuild</span>
+<span class="keyword">docker</span> compose logs -f web           <span class="comment"># Monitor logs</span>
+<span class="keyword">docker</span> compose exec web bash         <span class="comment"># Debug inside container</span>
+<span class="keyword">docker</span> compose restart web           <span class="comment"># Restart after changes</span>
+
+<span class="comment"># 2. Testing Workflow</span>
+<span class="keyword">docker</span> compose run --rm web npm test <span class="comment"># Run tests</span>
+<span class="keyword">docker</span> compose run --rm db psql -U user -d myapp <span class="comment"># Database access</span>
+
+<span class="comment"># 3. Production Deployment</span>
+<span class="keyword">docker</span> compose pull                    <span class="comment"># Pull latest images</span>
+<span class="keyword">docker</span> compose up -d --no-deps web   <span class="comment"># Deploy without dependencies</span>
+<span class="keyword">docker</span> compose ps                     <span class="comment"># Verify deployment</span>
+
+<span class="comment"># 4. Maintenance</span>
+<span class="keyword">docker</span> compose scale web=3            <span class="comment"># Scale services</span>
+<span class="keyword">docker</span> compose pause web              <span class="comment"># Pause for maintenance</span>
+<span class="keyword">docker</span> compose unpause web           <span class="comment"># Resume service</span>
+
+<span class="comment"># 5. Cleanup</span>
+<span class="keyword">docker</span> compose down -v               <span class="comment"># Stop and clean</span>
+<span class="keyword">docker</span> system prune -a               <span class="comment"># Clean up system</span></pre>
+                </div>
+
+                <h3>📁 Using Different Compose Files</h3>
+                <p>Docker Compose supports multiple file formats and environments.</p>
+                
+                <h4>File Naming Conventions</h4>
+                <table class="syntax-table">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Purpose</th>
+                            <th>Usage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>docker-compose.yml</code></td>
+                            <td>Default development</td>
+                            <td><code>docker compose up</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker-compose.prod.yml</code></td>
+                            <td>Production configuration</td>
+                            <td><code>docker compose -f docker-compose.prod.yml up</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker-compose.dev.yml</code></td>
+                            <td>Development overrides</td>
+                            <td><code>docker compose -f docker-compose.dev.yml up</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker-compose.test.yml</code></td>
+                            <td>Testing environment</td>
+                            <td><code>docker compose -f docker-compose.test.yml up</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Multiple File Commands</h4>
+                <div class="code-block">
+<pre><span class="comment"># Using specific compose file</span>
+<span class="keyword">docker</span> compose -f docker-compose.prod.yml up -d
+<span class="keyword">docker</span> compose -f docker-compose.dev.yml logs -f
+<span class="keyword">docker</span> compose -f docker-compose.test.yml down
+
+<span class="comment"># Using multiple compose files (merged)</span>
+<span class="keyword">docker</span> compose -f docker-compose.yml -f docker-compose.override.yml up
+<span class="keyword">docker</span> compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+<span class="comment"># Environment-specific files</span>
+<span class="keyword">docker</span> compose -f docker-compose.yml -f docker-compose.dev.yml up
+<span class="keyword">docker</span> compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+<span class="comment"># Project name with different files</span>
+<span class="keyword">docker</span> compose -p myproject -f docker-compose.prod.yml up
+<span class="keyword">docker</span> compose -p testproject -f docker-compose.test.yml up</pre>
+                </div>
+
+                <h4>Environment-Specific Examples</h4>
+                <div class="code-block">
+<pre><span class="comment"># Development with hot reload</span>
+<span class="keyword">docker</span> compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+<span class="comment"># Production deployment</span>
+<span class="keyword">docker</span> compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+<span class="comment"># Testing environment</span>
+<span class="keyword">docker</span> compose -f docker-compose.test.yml up --build
+<span class="keyword">docker</span> compose -f docker-compose.test.yml run --rm web npm test
+<span class="keyword">docker</span> compose -f docker-compose.test.yml down -v
+
+<span class="comment"># Staging environment</span>
+<span class="keyword">docker</span> compose -f docker-compose.yml -f docker-compose.staging.yml up -d</pre>
+                </div>
+
+                <h3>🏗️ Building Images in Docker Compose</h3>
+                <p>Advanced scenarios for building and managing images within Docker Compose.</p>
+
+                <h4>Build Configuration Options</h4>
+                <div class="code-block">
+<pre><span class="comment"># Basic build</span>
+<span class="property">services:</span>
+  <span class="property">web:</span>
+    <span class="property">build:</span> .
+
+<span class="comment"># Advanced build configuration</span>
+<span class="property">services:</span>
+  <span class="property">web:</span>
+    <span class="property">build:</span>
+      <span class="property">context:</span> <span class="string">./app</span>
+      <span class="property">dockerfile:</span> <span class="string">Dockerfile.prod</span>
+      <span class="property">args:</span>
+        <span class="property">NODE_ENV:</span> <span class="string">production</span>
+        <span class="property">BUILD_DATE:</span> <span class="string">${BUILD_DATE}</span>
+      <span class="property">target:</span> <span class="string">production</span>
+      <span class="property">cache_from:</span>
+        - <span class="string">myapp:latest</span>
+        - <span class="string">myapp:dev</span>
+      <span class="property">labels:</span>
+        - <span class="string">com.example.service=web</span>
+        - <span class="string">com.example.version=1.0</span></pre>
+                </div>
+
+                <h4>Multi-Stage Build Example</h4>
+                <div class="code-block">
+<pre><span class="comment"># docker-compose.yml with multi-stage build</span>
+<span class="property">version:</span> <span class="string">"3.9"</span>
+
+<span class="property">services:</span>
+  <span class="property">web:</span>
+    <span class="property">build:</span>
+      <span class="property">context:</span> .
+      <span class="property">dockerfile:</span> <span class="string">Dockerfile</span>
+      <span class="property">target:</span> <span class="string">production</span>
+      <span class="property">args:</span>
+        <span class="property">NODE_ENV:</span> <span class="string">production</span>
+        <span class="property">BUILDKIT_INLINE_CACHE:</span> <span class="number">1</span>
+    <span class="property">image:</span> <span class="string">myapp:${VERSION:-latest}</span>
+    <span class="property">container_name:</span> <span class="string">myapp-web</span>
+    <span class="property">ports:</span>
+      - <span class="string">"3000:3000"</span>
+    <span class="property">environment:</span>
+      <span class="property">NODE_ENV:</span> <span class="string">production</span>
+
+  <span class="property">web-dev:</span>
+    <span class="property">build:</span>
+      <span class="property">context:</span> .
+      <span class="property">dockerfile:</span> <span class="string">Dockerfile</span>
+      <span class="property">target:</span> <span class="string">development</span>
+      <span class="property">args:</span>
+        <span class="property">NODE_ENV:</span> <span class="string">development</span>
+    <span class="property">image:</span> <span class="string">myapp:dev</span>
+    <span class="property">container_name:</span> <span class="string">myapp-web-dev</span>
+    <span class="property">ports:</span>
+      - <span class="string">"3001:3000"</span>
+    <span class="property">volumes:</span>
+      - <span class="string">./src:/app/src</span>
+    <span class="property">environment:</span>
+      <span class="property">NODE_ENV:</span> <span class="string">development</span></pre>
+                </div>
+
+                <h4>Build Commands and Scenarios</h4>
+                <table class="syntax-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Purpose</th>
+                            <th>Options</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>docker compose build</code></td>
+                            <td>Build all services</td>
+                            <td><code>--no-cache</code>, <code>--pull</code>, <code>--parallel</code></td>
+                            <td><code>docker compose build --no-cache</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose build service</code></td>
+                            <td>Build specific service</td>
+                            <td><code>--no-cache</code>, <code>--pull</code></td>
+                            <td><code>docker compose build web</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose up --build</code></td>
+                            <td>Build and start</td>
+                            <td><code>--force-recreate</code></td>
+                            <td><code>docker compose up --build -d</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>docker compose pull</code></td>
+                            <td>Pull base images</td>
+                            <td><code>--ignore-pull-failures</code></td>
+                            <td><code>docker compose pull</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Build Scenarios</h4>
+                <div class="code-block">
+<pre><span class="comment"># Development build with hot reload</span>
+<span class="keyword">docker</span> compose -f docker-compose.dev.yml build --no-cache
+<span class="keyword">docker</span> compose -f docker-compose.dev.yml up -d
+
+<span class="comment"># Production build with specific version</span>
+<span class="keyword">VERSION</span>=<span class="string">v1.2.3</span> <span class="keyword">docker</span> compose -f docker-compose.prod.yml build
+<span class="keyword">VERSION</span>=<span class="string">v1.2.3</span> <span class="keyword">docker</span> compose -f docker-compose.prod.yml up -d
+
+<span class="comment"># Multi-architecture build</span>
+<span class="keyword">docker</span> compose build --build-arg BUILDPLATFORM=linux/amd64
+<span class="keyword">docker</span> compose build --build-arg BUILDPLATFORM=linux/arm64
+
+<span class="comment"># Build with buildx for advanced features</span>
+<span class="keyword">DOCKER_BUILDKIT</span>=<span class="number">1</span> <span class="keyword">docker</span> compose build
+<span class="keyword">docker</span> buildx build --platform linux/amd64,linux/arm64 -t myapp:latest .</pre>
+                </div>
+
+                <h4>Build Optimization Examples</h4>
+                <div class="code-block">
+<pre><span class="comment"># Build with cache optimization</span>
+<span class="keyword">docker</span> compose build --parallel --build-arg BUILDKIT_INLINE_CACHE=1
+
+<span class="comment"># Build specific target in multi-stage</span>
+<span class="keyword">docker</span> compose build --build-arg TARGET=production web
+
+<span class="comment"># Build with custom registry</span>
+<span class="keyword">docker</span> compose build --build-arg REGISTRY=myregistry.com web
+
+<span class="comment"># Build and push to registry</span>
+<span class="keyword">docker</span> compose build web
+<span class="keyword">docker</span> compose push web
+
+<span class="comment"># Build with secrets</span>
+<span class="keyword">echo</span> <span class="string">"mysecret"</span> | <span class="keyword">docker</span> compose build --build-arg SECRET_KEY=web</pre>
+                </div>
+
+                <h3>⚡ Advanced Command Combinations</h3>
+                <div class="code-block">
+<pre><span class="comment"># Zero-downtime deployment with custom file</span>
+<span class="keyword">docker</span> compose -f docker-compose.prod.yml pull
+<span class="keyword">docker</span> compose -f docker-compose.prod.yml up -d --no-deps --scale web=2 web
+<span class="keyword">docker</span> compose -f docker-compose.prod.yml up -d --no-deps --scale web=1 web
+<span class="keyword">docker</span> compose -f docker-compose.prod.yml up -d --no-deps --scale web=0 web
+
+<span class="comment"># Database migration with custom file</span>
+<span class="keyword">docker</span> compose -f docker-compose.prod.yml run --rm web python manage.py migrate
+<span class="keyword">docker</span> compose -f docker-compose.prod.yml restart web
+
+<span class="comment"># Backup and restore with custom file</span>
+<span class="keyword">docker</span> compose -f docker-compose.prod.yml exec db pg_dump -U user myapp > backup.sql
+<span class="keyword">docker</span> compose -f docker-compose.prod.yml exec -T db psql -U user myapp < backup.sql
+
+<span class="comment"># Health check monitoring with custom file</span>
+<span class="keyword">docker</span> compose -f docker-compose.prod.yml ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
+<span class="keyword">docker</span> compose -f docker-compose.prod.yml logs --tail=50 --since=1h web</pre>
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section id="faq" class="faq">
+                <h2>❓ Frequently Asked Questions</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">What's the difference between Docker and Docker Compose?</div>
+                    <div class="faq-answer">
+                        <strong>Docker</strong> manages individual containers with <code>docker run</code> commands. <strong>Docker Compose</strong> manages multi-container applications with a declarative YAML file. Compose is built on top of Docker and provides orchestration, networking, and service discovery.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do services communicate in Docker Compose?</div>
+                    <div class="faq-answer">
+                        Services communicate through the default bridge network using service names as hostnames. Compose automatically creates DNS entries, so <code>web</code> can reach <code>db</code> using the hostname <code>db</code>.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Can I use Docker Compose in production?</div>
+                    <div class="faq-answer">
+                        Yes, but with considerations. Compose is great for single-host deployments. For multi-host production, consider Docker Swarm or Kubernetes. Use environment-specific compose files and proper secrets management.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do I handle environment variables securely?</div>
+                    <div class="faq-answer">
+                        Use <code>.env</code> files for development and Docker secrets or external secret management for production. Never commit sensitive data to version control.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What's the difference between volumes and bind mounts?</div>
+                    <div class="faq-answer">
+                        <strong>Bind mounts</strong> map host directories directly to containers (good for development). <strong>Named volumes</strong> are managed by Docker (better for production data persistence).
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do I scale services in Docker Compose?</div>
+                    <div class="faq-answer">
+                        Use <code>docker compose up --scale web=3</code> to run multiple instances. For production scaling, consider Docker Swarm mode or Kubernetes.
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Interactive Generator JavaScript
+        let serviceCount = 1;
+
+        function addService() {
+            const container = document.getElementById('services-container');
+            const newService = document.querySelector('.service-config').cloneNode(true);
+            
+            serviceCount++;
+            newService.setAttribute('data-service', serviceCount - 1);
+            newService.querySelector('h4').textContent = `Service ${serviceCount}`;
+            newService.querySelector('.service-name').value = '';
+            newService.querySelector('.build-context').value = '.';
+            newService.querySelector('.image-name').value = '';
+            newService.querySelector('.ports').value = '';
+            newService.querySelector('.environment').value = '';
+            newService.querySelector('.depends-on').value = '';
+            newService.querySelector('.volumes').value = '';
+            newService.querySelector('.networks').value = '';
+            newService.querySelector('.container-name').value = '';
+            newService.querySelector('.command').value = '';
+            newService.querySelector('.working-dir').value = '';
+            newService.querySelector('.user').value = '';
+            newService.querySelector('.healthcheck').value = '';
+            newService.querySelector('.labels').value = '';
+            newService.querySelector('.memory-limit').value = '';
+            newService.querySelector('.cpu-limit').value = '';
+            
+            container.appendChild(newService);
+        }
+
+        function generateCompose() {
+            const projectName = document.getElementById('project-name').value || 'my-app';
+            const version = document.getElementById('compose-version').value;
+            
+            let compose = `version: "${version}"\n\nservices:\n`;
+            let volumes = [];
+            let networks = [];
+            
+            const services = document.querySelectorAll('.service-config');
+            services.forEach((service, index) => {
+                const name = service.querySelector('.service-name').value || `service-${index + 1}`;
+                const type = service.querySelector('.service-type').value;
+                const ports = service.querySelector('.ports').value;
+                const env = service.querySelector('.environment').value;
+                const depends = service.querySelector('.depends-on').value;
+                const volumesList = service.querySelector('.volumes').value;
+                const networksList = service.querySelector('.networks').value;
+                const containerName = service.querySelector('.container-name').value;
+                const command = service.querySelector('.command').value;
+                const workingDir = service.querySelector('.working-dir').value;
+                const user = service.querySelector('.user').value;
+                const healthcheck = service.querySelector('.healthcheck').value;
+                const labels = service.querySelector('.labels').value;
+                const memoryLimit = service.querySelector('.memory-limit').value;
+                const cpuLimit = service.querySelector('.cpu-limit').value;
+                const restart = service.querySelector('.restart').value;
+                
+                compose += `  ${name}:\n`;
+                
+                if (type === 'build') {
+                    const context = service.querySelector('.build-context').value;
+                    compose += `    build: ${context}\n`;
+                } else {
+                    const image = service.querySelector('.image-name').value;
+                    compose += `    image: ${image}\n`;
+                }
+                
+                if (containerName) {
+                    compose += `    container_name: ${containerName}\n`;
+                }
+                
+                if (ports) {
+                    compose += `    ports:\n`;
+                    ports.split(',').forEach(port => {
+                        compose += `      - "${port.trim()}"\n`;
+                    });
+                }
+                
+                if (env) {
+                    compose += `    environment:\n`;
+                    env.split('\n').forEach(line => {
+                        if (line.trim()) {
+                            compose += `      - ${line.trim()}\n`;
+                        }
+                    });
+                }
+                
+                if (volumesList) {
+                    compose += `    volumes:\n`;
+                    volumesList.split('\n').forEach(volume => {
+                        if (volume.trim()) {
+                            compose += `      - ${volume.trim()}\n`;
+                            // Extract named volumes for volumes section
+                            if (volume.includes(':') && !volume.startsWith('./') && !volume.startsWith('/')) {
+                                const volumeName = volume.split(':')[0];
+                                if (!volumes.includes(volumeName)) {
+                                    volumes.push(volumeName);
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                if (networksList) {
+                    compose += `    networks:\n`;
+                    networksList.split(',').forEach(network => {
+                        if (network.trim()) {
+                            compose += `      - ${network.trim()}\n`;
+                            if (!networks.includes(network.trim())) {
+                                networks.push(network.trim());
+                            }
+                        }
+                    });
+                }
+                
+                if (depends) {
+                    compose += `    depends_on:\n`;
+                    depends.split(',').forEach(dep => {
+                        compose += `      - ${dep.trim()}\n`;
+                    });
+                }
+                
+                if (command) {
+                    compose += `    command: ${command}\n`;
+                }
+                
+                if (workingDir) {
+                    compose += `    working_dir: ${workingDir}\n`;
+                }
+                
+                if (user) {
+                    compose += `    user: ${user}\n`;
+                }
+                
+                if (healthcheck) {
+                    compose += `    healthcheck:\n`;
+                    compose += `      test: ["CMD", "${healthcheck}"]\n`;
+                    compose += `      interval: 30s\n`;
+                    compose += `      timeout: 10s\n`;
+                    compose += `      retries: 3\n`;
+                }
+                
+                if (labels) {
+                    compose += `    labels:\n`;
+                    labels.split('\n').forEach(label => {
+                        if (label.trim()) {
+                            compose += `      - ${label.trim()}\n`;
+                        }
+                    });
+                }
+                
+                if (memoryLimit || cpuLimit) {
+                    compose += `    deploy:\n`;
+                    if (memoryLimit) {
+                        compose += `      resources:\n`;
+                        compose += `        limits:\n`;
+                        compose += `          memory: ${memoryLimit}\n`;
+                    }
+                    if (cpuLimit) {
+                        if (!memoryLimit) {
+                            compose += `      resources:\n`;
+                        }
+                        compose += `        limits:\n`;
+                        compose += `          cpus: ${cpuLimit}\n`;
+                    }
+                }
+                
+                if (restart !== 'no') {
+                    compose += `    restart: ${restart}\n`;
+                }
+                
+                compose += '\n';
+            });
+            
+            // Add volumes section if any named volumes were used
+            if (volumes.length > 0) {
+                compose += 'volumes:\n';
+                volumes.forEach(volume => {
+                    compose += `  ${volume}:\n`;
+                });
+                compose += '\n';
+            }
+            
+            // Add networks section if any custom networks were used
+            if (networks.length > 0) {
+                compose += 'networks:\n';
+                networks.forEach(network => {
+                    compose += `  ${network}:\n`;
+                    compose += `    driver: bridge\n`;
+                });
+            }
+            
+            document.getElementById('compose-content').textContent = compose;
+            document.getElementById('generated-output').style.display = 'block';
+        }
+
+        function copyToClipboard() {
+            const content = document.getElementById('compose-content').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Service type change handler
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('service-type')) {
+                const service = e.target.closest('.service-config');
+                const buildConfig = service.querySelector('.build-config');
+                const imageConfig = service.querySelector('.image-config');
+                
+                if (e.target.value === 'build') {
+                    buildConfig.style.display = 'block';
+                    imageConfig.style.display = 'none';
+                } else {
+                    buildConfig.style.display = 'none';
+                    imageConfig.style.display = 'block';
+                }
+            }
+        });
+
+        // Demo step navigation
+        function showStep(step) {
+            document.querySelectorAll('.demo-step').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${step}`).classList.add('active');
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add fade-in animation to sections
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
